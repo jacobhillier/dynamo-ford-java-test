@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.jacobhillier'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
