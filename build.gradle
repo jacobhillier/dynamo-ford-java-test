@@ -16,6 +16,7 @@ dependencies {
     testImplementation 'org.codehaus.groovy:groovy-all:2.5.10'
     testImplementation platform('org.spockframework:spock-bom:2.0-M1-groovy-2.5')
     testImplementation 'org.spockframework:spock-core'
+    testImplementation 'org.buildobjects:jproc:2.2.3'
 }
 
 test {
