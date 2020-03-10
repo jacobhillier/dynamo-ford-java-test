@@ -13,9 +13,12 @@ repositories {
 }
 
 dependencies {
+    implementation 'commons-cli:commons-cli:1.4'
+
     testImplementation 'org.codehaus.groovy:groovy-all:2.5.10'
     testImplementation platform('org.spockframework:spock-bom:2.0-M1-groovy-2.5')
     testImplementation 'org.spockframework:spock-core'
+    testRuntime 'net.bytebuddy:byte-buddy:1.9.3'
     testImplementation 'org.buildobjects:jproc:2.2.3'
 }
 
