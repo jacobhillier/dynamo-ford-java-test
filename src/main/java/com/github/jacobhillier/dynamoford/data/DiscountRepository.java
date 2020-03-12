@@ -19,6 +19,14 @@ public class DiscountRepository {
                     1,
                     LocalDateTime.of(2020, 3, 11, 0, 0, 0),
                     LocalDateTime.of(2020, 3, 17, 23, 59, 59)
+            ),
+            new Discount(
+                    "apple",
+                    BigDecimal.valueOf(0.9),
+                    null,
+                    null,
+                    LocalDateTime.of(2020, 3, 15, 0, 0, 0),
+                    LocalDateTime.of(2020, 4, 30, 23, 59, 59)
             )
     );
 
