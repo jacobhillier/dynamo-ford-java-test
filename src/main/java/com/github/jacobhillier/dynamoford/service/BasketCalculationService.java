@@ -48,12 +48,11 @@ public class BasketCalculationService {
 
     private BigDecimal calculateBasketTotalForProduct(BasketItem basketItem, Discount discount, Map<String, BasketItem> productNameToBasketItem) {
         BigDecimal productPrice = productRepository.findProductPrice(basketItem.getProductName());
-        BigDecimal priceWithoutDiscount = productPrice.multiply(BigDecimal.valueOf(basketItem.getQuantity()));
 
         if (discount == null || !basketEligibleForDiscount(discount, productNameToBasketItem)) {
-            return priceWithoutDiscount;
+            return productPrice.multiply(BigDecimal.valueOf(basketItem.getQuantity()));
         } else {
-            return priceWithoutDiscount.multiply(discount.getMultiplier());
+            return calculatePriceWithDiscount(basketItem, productPrice, discount);
         }
     }
 
@@ -64,6 +63,29 @@ public class BasketCalculationService {
         } else {
             BasketItem basketItem = productNameToBasketItem.get(requiredBasketItem.getProductName());
             return basketItem != null && basketItem.getQuantity() >= requiredBasketItem.getMinimumQuantity();
+        }
+    }
+
+    private BigDecimal calculatePriceWithDiscount(BasketItem basketItem, BigDecimal productPrice, Discount discount) {
+        int itemsWithDiscount = numberOfItemsEligibleForDiscount(basketItem, discount);
+        int itemsWithoutDiscount = basketItem.getQuantity() - itemsWithDiscount;
+
+        BigDecimal itemsWithoutDiscountPrice = productPrice
+                .multiply(BigDecimal.valueOf(itemsWithoutDiscount));
+
+        BigDecimal itemsWithDiscountPrice = productPrice
+                .multiply(BigDecimal.valueOf(itemsWithDiscount))
+                .multiply(discount.getMultiplier());
+
+        return itemsWithoutDiscountPrice.add(itemsWithDiscountPrice);
+    }
+
+    private int numberOfItemsEligibleForDiscount(BasketItem basketItem, Discount discount) {
+        Integer discountQuantity = discount.getDiscountQuantity();
+        if (discountQuantity == null || discountQuantity >= basketItem.getQuantity()) {
+            return basketItem.getQuantity();
+        } else {
+            return discountQuantity;
         }
     }
 }
