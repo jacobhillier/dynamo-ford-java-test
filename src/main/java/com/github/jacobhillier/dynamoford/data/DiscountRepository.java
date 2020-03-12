@@ -4,10 +4,11 @@ import com.github.jacobhillier.dynamoford.model.Discount;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class DiscountRepository {
 
-    public List<Discount> findValidDiscounts(List<String> productNames, LocalDateTime dateTime) {
+    public List<Discount> findValidDiscounts(Set<String> productNames, LocalDateTime dateTime) {
         return null;
     }
 }

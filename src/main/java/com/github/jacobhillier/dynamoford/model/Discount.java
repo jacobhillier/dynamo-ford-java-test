@@ -9,4 +9,5 @@ public class Discount {
 
     private final String productName;
     private final BigDecimal multiplier;
+    private final RequiredBasketItem requiredBasketItem;
 }
