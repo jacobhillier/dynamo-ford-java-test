@@ -28,6 +28,6 @@ public class Main {
         BasketCalculationService basketCalculationService = new BasketCalculationService(productRepository, discountRepository);
 
         Main main = new Main(argumentParser, basketCalculationService);
-        main.parseArgsAndCalculate(args);
+        System.out.println(main.parseArgsAndCalculate(args));
     }
 }
