@@ -23,9 +23,9 @@ public class BasketCalculationService {
     private final DiscountRepository discountRepository;
 
     public BigDecimal calculateBasketValue(List<BasketItem> basketItems, LocalDateTime dateTime) {
-        Map<String, BasketItem> productNameToBasketItem = extractBasketProductNames(basketItems);
+        Map<String, BasketItem> productNameToBasketItem = mapProductNameToBasketItem(basketItems);
 
-        Map<String, Discount> productNameToDiscount = findAndMapProductDiscounts(dateTime, productNameToBasketItem.keySet());
+        Map<String, Discount> productNameToDiscount = findAndMapProductDiscountsToProductName(dateTime, productNameToBasketItem.keySet());
 
         return basketItems.stream()
                 .map(basketItem -> {
@@ -36,12 +36,12 @@ public class BasketCalculationService {
                 .orElse(BigDecimal.ZERO);
     }
 
-    private Map<String, BasketItem> extractBasketProductNames(List<BasketItem> basketItems) {
+    private Map<String, BasketItem> mapProductNameToBasketItem(List<BasketItem> basketItems) {
         return basketItems.stream()
                 .collect(toMap(BasketItem::getProductName, Function.identity()));
     }
 
-    private Map<String, Discount> findAndMapProductDiscounts(LocalDateTime dateTime, Set<String> basketProductNames) {
+    private Map<String, Discount> findAndMapProductDiscountsToProductName(LocalDateTime dateTime, Set<String> basketProductNames) {
         return discountRepository.findValidDiscounts(basketProductNames, dateTime).stream()
                 .collect(toMap(Discount::getProductName, Function.identity()));
     }
@@ -49,14 +49,14 @@ public class BasketCalculationService {
     private BigDecimal calculateBasketTotalForProduct(BasketItem basketItem, Discount discount, Map<String, BasketItem> productNameToBasketItem) {
         BigDecimal productPrice = productRepository.findProductPrice(basketItem.getProductName());
 
-        if (discount == null || !basketEligibleForDiscount(discount, productNameToBasketItem)) {
-            return productPrice.multiply(BigDecimal.valueOf(basketItem.getQuantity()));
+        if (discount == null || !basketIsEligibleForDiscount(productNameToBasketItem, discount)) {
+            return calculatePriceWithoutDiscount(basketItem, productPrice);
         } else {
             return calculatePriceWithDiscount(basketItem, productPrice, discount);
         }
     }
 
-    private boolean basketEligibleForDiscount(Discount discount, Map<String, BasketItem> productNameToBasketItem) {
+    private boolean basketIsEligibleForDiscount(Map<String, BasketItem> productNameToBasketItem, Discount discount) {
         RequiredBasketItem requiredBasketItem = discount.getRequiredBasketItem();
         if (requiredBasketItem == null) {
             return true;
@@ -66,21 +66,25 @@ public class BasketCalculationService {
         }
     }
 
-    private BigDecimal calculatePriceWithDiscount(BasketItem basketItem, BigDecimal productPrice, Discount discount) {
-        int itemsWithDiscount = numberOfItemsEligibleForDiscount(basketItem, discount);
-        int itemsWithoutDiscount = basketItem.getQuantity() - itemsWithDiscount;
-
-        BigDecimal itemsWithoutDiscountPrice = productPrice
-                .multiply(BigDecimal.valueOf(itemsWithoutDiscount));
-
-        BigDecimal itemsWithDiscountPrice = productPrice
-                .multiply(BigDecimal.valueOf(itemsWithDiscount))
-                .multiply(discount.getMultiplier());
-
-        return itemsWithoutDiscountPrice.add(itemsWithDiscountPrice);
+    private BigDecimal calculatePriceWithoutDiscount(BasketItem basketItem, BigDecimal productPrice) {
+        return productPrice.multiply(BigDecimal.valueOf(basketItem.getQuantity()));
     }
 
-    private int numberOfItemsEligibleForDiscount(BasketItem basketItem, Discount discount) {
+    private BigDecimal calculatePriceWithDiscount(BasketItem basketItem, BigDecimal productPrice, Discount discount) {
+        int quantityWithDiscount = quantityEligibleForDiscount(basketItem, discount);
+        int quantityWithoutDiscount = basketItem.getQuantity() - quantityWithDiscount;
+
+        BigDecimal quantityWithDiscountPrice = productPrice
+                .multiply(BigDecimal.valueOf(quantityWithDiscount))
+                .multiply(discount.getMultiplier());
+
+        BigDecimal quantityWithoutDiscountPrice = productPrice
+                .multiply(BigDecimal.valueOf(quantityWithoutDiscount));
+
+        return quantityWithoutDiscountPrice.add(quantityWithDiscountPrice);
+    }
+
+    private int quantityEligibleForDiscount(BasketItem basketItem, Discount discount) {
         Integer discountQuantity = discount.getDiscountQuantity();
         if (discountQuantity == null || discountQuantity >= basketItem.getQuantity()) {
             return basketItem.getQuantity();
