@@ -1,6 +1,7 @@
-package com.github.jacobhillier.dynamoford
+package com.github.jacobhillier.dynamoford.main
 
 import com.github.jacobhillier.dynamoford.model.BasketItem
+import com.github.jacobhillier.dynamoford.model.ParsedArguments
 import spock.lang.Specification
 
 import java.time.LocalDateTime

@@ -1,6 +1,5 @@
-package com.github.jacobhillier.dynamoford;
+package com.github.jacobhillier.dynamoford.model;
 
-import com.github.jacobhillier.dynamoford.model.BasketItem;
 import lombok.Data;
 
 import java.time.LocalDateTime;

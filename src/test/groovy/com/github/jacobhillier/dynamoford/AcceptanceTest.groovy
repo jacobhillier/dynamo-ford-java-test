@@ -1,5 +1,6 @@
 package com.github.jacobhillier.dynamoford
 
+import com.github.jacobhillier.dynamoford.main.Main
 import org.buildobjects.process.ProcBuilder
 import org.buildobjects.process.ProcResult
 import spock.lang.Specification

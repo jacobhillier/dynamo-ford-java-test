@@ -1,6 +1,7 @@
-package com.github.jacobhillier.dynamoford
+package com.github.jacobhillier.dynamoford.main
 
 import com.github.jacobhillier.dynamoford.model.BasketItem
+import com.github.jacobhillier.dynamoford.model.ParsedArguments
 import com.github.jacobhillier.dynamoford.service.BasketCalculationService
 import spock.lang.Specification
 

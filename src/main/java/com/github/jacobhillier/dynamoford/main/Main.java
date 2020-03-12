@@ -1,7 +1,8 @@
-package com.github.jacobhillier.dynamoford;
+package com.github.jacobhillier.dynamoford.main;
 
 import com.github.jacobhillier.dynamoford.data.DiscountRepository;
 import com.github.jacobhillier.dynamoford.data.ProductRepository;
+import com.github.jacobhillier.dynamoford.model.ParsedArguments;
 import com.github.jacobhillier.dynamoford.service.BasketCalculationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.cli.ParseException;
