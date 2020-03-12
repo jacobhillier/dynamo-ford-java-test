@@ -1,5 +1,6 @@
 package com.github.jacobhillier.dynamoford;
 
+import com.github.jacobhillier.dynamoford.data.DiscountRepository;
 import com.github.jacobhillier.dynamoford.data.ProductRepository;
 import com.github.jacobhillier.dynamoford.service.BasketCalculationService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,10 @@ public class Main {
 
     public static void main(String[] args) throws ParseException {
         ProductRepository productRepository = new ProductRepository();
+        DiscountRepository discountRepository = new DiscountRepository();
 
         ArgumentParser argumentParser = new ArgumentParser();
-        BasketCalculationService basketCalculationService = new BasketCalculationService(productRepository);
+        BasketCalculationService basketCalculationService = new BasketCalculationService(productRepository, discountRepository);
 
         Main main = new Main(argumentParser, basketCalculationService);
         main.parseArgsAndCalculate(args);
