@@ -31,3 +31,12 @@ test {
         events 'passed', 'skipped', 'failed'
     }
 }
+
+jar {
+    manifest {
+        attributes('Main-Class': 'com.github.jacobhillier.dynamoford.main.Main')
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
