@@ -17,6 +17,6 @@ class ProductRepositoryTest extends Specification {
         "soup"      | 0.65
         "bread"     | 0.80
         "milk"      | 1.30
-        "apples"    | 0.10
+        "apple"     | 0.10
     }
 }
