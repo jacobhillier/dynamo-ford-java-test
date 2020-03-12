@@ -25,8 +25,8 @@ class BasketCalculationServiceTest extends Specification {
 
     void "should calculate basket value with matching discounts"() {
         given:
-        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, null)
-        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.2, null, null)
+        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, null, MIN, MAX)
+        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.2, null, null, MIN, MAX)
 
         and:
         BigDecimal expectedProduct1Price = (productPrice1 * basketItem1.quantity) * basketItem1Discount.multiplier
@@ -51,7 +51,7 @@ class BasketCalculationServiceTest extends Specification {
     void "should calculate basket value with matching discount and required basket item"() {
         given:
         RequiredBasketItem requiredBasketItem = new RequiredBasketItem(basketItem1.productName, 1)
-        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.1, requiredBasketItem, null)
+        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.1, requiredBasketItem, null, MIN, MAX)
 
         and:
         BigDecimal expectedProduct1Price = (productPrice1 * basketItem1.quantity)
@@ -72,7 +72,7 @@ class BasketCalculationServiceTest extends Specification {
     void "should calculate basket value with matching discount and required basket item not met"() {
         given:
         RequiredBasketItem requiredBasketItem = new RequiredBasketItem(basketItem1.productName, basketItem1.quantity + 1)
-        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.1, requiredBasketItem, null)
+        Discount basketItem2Discount = new Discount(basketItem2.productName, 0.1, requiredBasketItem, null, MIN, MAX)
 
         and:
         BigDecimal expectedProduct1Price = (productPrice1 * basketItem1.quantity)
@@ -92,7 +92,7 @@ class BasketCalculationServiceTest extends Specification {
 
     void "should calculate basket value with matching discount and partial quantity discounted"() {
         given:
-        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, 2)
+        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, 2, MIN, MAX)
 
         and:
         BigDecimal quantityWithoutDiscount = basketItem1.quantity - basketItem1Discount.discountQuantity
@@ -112,7 +112,7 @@ class BasketCalculationServiceTest extends Specification {
 
     void "should calculate basket value with matching discount and full quantity discounted"() {
         given:
-        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, basketItem1.quantity)
+        Discount basketItem1Discount = new Discount(basketItem1.productName, 0.1, null, basketItem1.quantity, MIN, MAX)
 
         and:
         BigDecimal expectedProduct1Price = (productPrice1 * basketItem1.quantity * basketItem1Discount.multiplier)
